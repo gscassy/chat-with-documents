@@ -35,7 +35,13 @@ loaders = {".txt": load_txt, ".pdf": load_pdf, ".docx": load_docx, ".odt": load_
 
 def is_streamlit_cloud():
     """Check if running on Streamlit Cloud"""
-    return os.getenv("STREAMLIT_SHARING_MODE") is not None
+    #return os.getenv("STREAMLIT_SHARING_MODE") is not None
+    env = os.environ
+    return (
+            "STREAMLIT_RUNTIME" in env or
+            "STREAMLIT_SHARING_MODE" in env or
+            "STREAMLIT_SERVER_HEADLESS" in env
+    )
 
 
 def extract_zip_and_scan(uploaded_zip):
