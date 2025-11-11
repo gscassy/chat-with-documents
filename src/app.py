@@ -65,18 +65,20 @@ def is_streamlit_cloud():
         return True
 
     return False
-#def is_streamlit_cloud():
-#    """Check if running on Streamlit Cloud"""
-#    return os.getenv("STREAMLIT_SHARING_MODE") is not None
+
+# Uncomment below conditional expression to detect if you are running on Streamlit Cloud or Local
+#st.write("☁️ Detected environment:", "Streamlit Cloud" if is_streamlit_cloud() else "Local")
 
 
-st.write("☁️ Detected environment:", "Streamlit Cloud" if is_streamlit_cloud() else "Local")
+#==============================================================================
+# Uncomment below code snippet to detect if your secret key is loaded correctly on Streamlit Cloud
+#==============================================================================
+#try:
+#    gemini_api_key = st.secrets.get("GEMINI_API_KEY", None)
+#    st.write("✅ Secret loaded:", bool(gemini_api_key))
+#except Exception as e:
+#    st.error(f"❌ Error loading secret: {e}")
 
-try:
-    gemini_api_key = st.secrets.get("GEMINI_API_KEY", None)
-    st.write("✅ Secret loaded:", bool(gemini_api_key))
-except Exception as e:
-    st.error(f"❌ Error loading secret: {e}")
 
 def extract_zip_and_scan(uploaded_zip):
     """
