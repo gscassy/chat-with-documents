@@ -7,7 +7,7 @@ a vector store, and enables question-answering based on the document content usi
 
 import os
 import time
-
+import socket
 import streamlit as st
 
 from document_loader import load_txt, load_pdf, load_docx, load_odt
