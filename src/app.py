@@ -31,49 +31,40 @@ loaders = {".txt": load_txt, ".pdf": load_pdf, ".docx": load_docx, ".odt": load_
 # ============================================================================
 
 #Stremlit Variables Detection
-st.title("Environment Debugger")
+#st.title("Environment Debugger")
 
-streamlit_vars = {k: v for k, v in os.environ.items() if "STREAMLIT" in k or "CLOUD" in k}
-if not streamlit_vars:
-    st.warning("No Streamlit-related environment variables found.")
-else:
-    st.json(streamlit_vars)
+#streamlit_vars = {k: v for k, v in os.environ.items() if "STREAMLIT" in k or "CLOUD" in k}
+#if not streamlit_vars:
+#    st.warning("No Streamlit-related environment variables found.")
+#else:
+#    st.json(streamlit_vars)
 
 
 def is_streamlit_cloud():
     """
-    Detect if the app is running on Streamlit Cloud (2025+).
-    Works with both legacy and new environment setups.
+    Detect if running on Streamlit Community Cloud (2025+).
+    Uses domain and environment heuristics.
     """
-    # --- Common Streamlit Cloud environment variables ---
-    cloud_indicators = [
-        "STREAMLIT_RUNTIME_ENV",
-        "STREAMLIT_SERVER_ROOT_URL",
-        "STREAMLIT_CLOUD_URL",
-        "STREAMLIT_SHARING_MODE",  # legacy
-    ]
+    # 1️⃣ Check for Streamlit Cloud domain name in known URLs
+    server_url = os.getenv("STREAMLIT_SERVER_ROOT_URL", "")
+    if "streamlit.app" in server_url:
+        return True
 
-    # Check environment variables
-    for var in cloud_indicators:
-        value = os.getenv(var)
-        if value and ("streamlit.app" in value or value == "cloud"):
-            return True
-
-    # --- Fallback: domain-based detection ---
+    # 2️⃣ Check hostname (useful on Streamlit Cloud's container)
     try:
         hostname = socket.gethostname()
-        if "streamlit" in hostname or "streamlit.app" in hostname:
+        if "streamlit" in hostname:
             return True
     except Exception:
         pass
 
-    # --- Fallback: Look for specific Streamlit Cloud markers ---
-    env_dump = " ".join(os.environ.keys()).lower()
-    if "streamlit" in env_dump and "cloud" in env_dump:
+    # 3️⃣ Last resort: check if running inside container with Streamlit Cloud pattern
+    env_keys = " ".join(os.environ.keys()).lower()
+    if "streamlit" in env_keys and "server" in env_keys:
+        # Optional: You can also check for PORT 8501 (default Cloud port)
         return True
 
     return False
-
 #def is_streamlit_cloud():
 #    """Check if running on Streamlit Cloud"""
 #    return os.getenv("STREAMLIT_SHARING_MODE") is not None
