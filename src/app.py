@@ -40,7 +40,7 @@ loaders = {".txt": load_txt, ".pdf": load_pdf, ".docx": load_docx, ".odt": load_
 st.write("☁️ Detected environment:", "Streamlit Cloud" if is_streamlit_cloud() else "Local")
 
 try:
-    key = get_secret(GEMINI_API_KEY")
+    key = get_secret("GEMINI_API_KEY")
     st.write("✅ Secret loaded:", bool(key))
 except Exception as e:
     st.error(f"❌ Error loading secret: {e}")
