@@ -10,7 +10,7 @@ import time
 
 import streamlit as st
 
-from config import is_streamlit_cloud, get_secret
+from src.config import is_streamlit_cloud, get_secret
 from document_loader import load_txt, load_pdf, load_docx, load_odt
 from scan_folders import scan_folders
 from vector_store import (
@@ -22,8 +22,6 @@ from vector_store import (
 
 from response_generator import set_llm, generate_answer, set_langchain_history
 from retrieval_system import query_documents
-
-from langchain_core.messages import HumanMessage, AIMessage
 
 # Map file extensions to their respective loader functions
 loaders = {".txt": load_txt, ".pdf": load_pdf, ".docx": load_docx, ".odt": load_odt}
