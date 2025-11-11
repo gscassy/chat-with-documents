@@ -10,6 +10,8 @@ import time
 
 import streamlit as st
 
+from dotenv import load_dotenv
+
 from document_loader import load_txt, load_pdf, load_docx, load_odt
 from scan_folders import scan_folders
 from vector_store import (
@@ -35,25 +37,7 @@ loaders = {".txt": load_txt, ".pdf": load_pdf, ".docx": load_docx, ".odt": load_
 
 def is_streamlit_cloud():
     """Check if running on Streamlit Cloud"""
-    #return os.getenv("STREAMLIT_SHARING_MODE") is not None
-    env = os.environ
-    return (
-            "STREAMLIT_RUNTIME" in env or
-            "STREAMLIT_SHARING_MODE" in env or
-            "STREAMLIT_SERVER_HEADLESS" in env
-    )
-
-
-def get_secret(key: str, default: str = None):
-    """
-    Unified way to fetch secrets.
-    Uses st.secrets on Streamlit Cloud, .env locally.
-    """
-    if is_streamlit_cloud():
-        return st.secrets.get(key, default)
-    else:
-        load_dotenv()
-        return os.getenv(key, default)
+    return os.getenv("STREAMLIT_SHARING_MODE") is not None
 
 
 def extract_zip_and_scan(uploaded_zip):
