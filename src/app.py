@@ -10,7 +10,6 @@ import time
 
 import streamlit as st
 
-from src.config import is_streamlit_cloud, get_secret
 from document_loader import load_txt, load_pdf, load_docx, load_odt
 from scan_folders import scan_folders
 from vector_store import (
@@ -32,9 +31,45 @@ loaders = {".txt": load_txt, ".pdf": load_pdf, ".docx": load_docx, ".odt": load_
 # ============================================================================
 
 
+def is_streamlit_cloud():
+    """
+    Detect if the app is running on Streamlit Cloud (2025+).
+    Works with both legacy and new environment setups.
+    """
+    # --- Common Streamlit Cloud environment variables ---
+    cloud_indicators = [
+        "STREAMLIT_RUNTIME_ENV",
+        "STREAMLIT_SERVER_ROOT_URL",
+        "STREAMLIT_CLOUD_URL",
+        "STREAMLIT_SHARING_MODE",  # legacy
+    ]
+
+    # Check environment variables
+    for var in cloud_indicators:
+        value = os.getenv(var)
+        if value and ("streamlit.app" in value or value == "cloud"):
+            return True
+
+    # --- Fallback: domain-based detection ---
+    try:
+        hostname = socket.gethostname()
+        if "streamlit" in hostname or "streamlit.app" in hostname:
+            return True
+    except Exception:
+        pass
+
+    # --- Fallback: Look for specific Streamlit Cloud markers ---
+    env_dump = " ".join(os.environ.keys()).lower()
+    if "streamlit" in env_dump and "cloud" in env_dump:
+        return True
+
+    return False
+
 #def is_streamlit_cloud():
 #    """Check if running on Streamlit Cloud"""
 #    return os.getenv("STREAMLIT_SHARING_MODE") is not None
+
+
 st.write("☁️ Detected environment:", "Streamlit Cloud" if is_streamlit_cloud() else "Local")
 
 try:
