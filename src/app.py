@@ -44,6 +44,18 @@ def is_streamlit_cloud():
     )
 
 
+def get_secret(key: str, default: str = None):
+    """
+    Unified way to fetch secrets.
+    Uses st.secrets on Streamlit Cloud, .env locally.
+    """
+    if is_streamlit_cloud():
+        return st.secrets.get(key, default)
+    else:
+        load_dotenv()
+        return os.getenv(key, default)
+
+
 def extract_zip_and_scan(uploaded_zip):
     """
     Extract uploaded ZIP file to temporary directory and scan for documents.
