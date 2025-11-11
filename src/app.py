@@ -73,7 +73,7 @@ def is_streamlit_cloud():
 st.write("☁️ Detected environment:", "Streamlit Cloud" if is_streamlit_cloud() else "Local")
 
 try:
-    key = get_secret("GEMINI_API_KEY")
+    gemini_api_key = st.secrets.get("GEMINI_API_KEY", None)
     st.write("✅ Secret loaded:", bool(key))
 except Exception as e:
     st.error(f"❌ Error loading secret: {e}")
