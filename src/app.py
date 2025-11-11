@@ -30,6 +30,15 @@ loaders = {".txt": load_txt, ".pdf": load_pdf, ".docx": load_docx, ".odt": load_
 # Helper Functions
 # ============================================================================
 
+#Stremlit Variables Detection
+st.title("Environment Debugger")
+
+streamlit_vars = {k: v for k, v in os.environ.items() if "STREAMLIT" in k or "CLOUD" in k}
+if not streamlit_vars:
+    st.warning("No Streamlit-related environment variables found.")
+else:
+    st.json(streamlit_vars)
+
 
 def is_streamlit_cloud():
     """
